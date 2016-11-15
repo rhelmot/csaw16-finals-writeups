@@ -1,0 +1,418 @@
+package request;
+
+message Request {
+
+ enum RequestType {
+  Invalid = 0;
+  Login = 1;
+  Register = 2;
+  GetPlayerDetails = 3;
+  GetMonsterList = 4;
+  GetMonstersSeenAndCaptured = 5;
+  GetTreats = 6;
+  GetInventory = 7;
+  GetMonstersInRange = 8;
+  StartEncounter = 9;
+  GiveSeed = 10;
+  ThrowBall = 11;
+  RunFromEncounter = 12;
+  PowerUpMonster = 13;
+  EvolveMonster = 14;
+  TransferMonster = 15;
+  SetMonsterName = 16;
+  GetMapTiles = 17;
+  GetRecentStops = 18;
+  GetItemsFromStop = 19;
+  SetTeam = 20;
+  GetPitStatus = 21;
+  AssignPitDefender = 22;
+  StartPitBattle = 23;
+  SetAttacker = 24;
+  StepPitBattle = 25;
+  SetPitBattleAction = 26;
+  EndPitBattle = 27;
+  HealMonster = 28;
+  TravelToPitOfDoom = 29;
+  GetLevel40Flag = 30;
+  GetCatchEmAllFlag = 31;
+  GetAllPlayerInfo = 32;
+ }
+ optional RequestType type = 1;
+ optional bytes data = 2;
+}
+
+message LoginRequest {
+ optional string username = 1;
+ optional string password = 2;
+}
+
+message LoginResponse {
+
+ enum AccountStatus {
+  Unknown = 0;
+  LoginOK = 1;
+  InvalidUsernameOrPassword = 2;
+  AccountBanned = 3;
+ }
+ optional AccountStatus status = 1;
+ optional uint64 id = 2;
+ optional uint64 connectionid = 3;
+}
+
+message RegisterRequest {
+ optional string username = 1;
+ optional string password = 2;
+}
+
+message RegisterResponse {
+
+ enum RegisterStatus {
+  Unknown = 0;
+  RegisterOK = 1;
+  InvalidOrDuplicateUsername = 2;
+  BadPassword = 3;
+ }
+ optional RegisterStatus status = 1;
+ optional uint64 id = 2;
+ optional uint64 connectionid = 3;
+}
+
+message GetPlayerDetailsResponse {
+ optional uint32 level = 1;
+ optional uint32 xp = 2;
+ optional uint32 powder = 3;
+ optional int32 x = 4;
+ optional int32 y = 5;
+ optional uint32 team = 6;
+}
+
+message GetMonsterListResponse {
+ message MonsterDetails {
+  optional uint64 id = 1;
+  optional uint32 species = 2;
+  optional string name = 3;
+  optional uint32 hp = 4;
+  optional uint32 attack = 5;
+  optional uint32 defense = 6;
+  optional uint32 stamina = 7;
+  optional uint32 size = 8;
+  optional uint32 level = 9;
+  optional int32 x = 10;
+  optional int32 y = 11;
+  optional uint32 spawntime = 12;
+  optional uint32 ball = 13;
+  optional uint32 quickmove = 14;
+  optional uint32 chargemove = 15;
+  optional bool defending = 16;
+ }
+
+ repeated MonsterDetails monsters = 1;
+}
+
+message GetMonstersSeenAndCapturedResponse {
+ message SpeciesAndCount {
+  optional uint32 species = 1;
+  optional uint32 count = 2;
+ }
+
+ repeated SpeciesAndCount seen = 1;
+ repeated SpeciesAndCount captured = 2;
+}
+
+message GetTreatsResponse {
+ message SpeciesAndCount {
+  optional uint32 species = 1;
+  optional uint32 count = 2;
+ }
+
+ repeated SpeciesAndCount treats = 1;
+}
+
+message GetInventoryResponse {
+ message InventoryItem {
+  optional uint32 item = 1;
+  optional uint32 count = 2;
+ }
+
+ repeated InventoryItem items = 1;
+}
+
+message GetMonstersInRangeRequest {
+ optional int32 x = 1;
+ optional int32 y = 2;
+}
+
+message GetMonstersInRangeResponse {
+ message MonsterSighting {
+  optional uint32 species = 1;
+  optional int32 x = 2;
+  optional int32 y = 3;
+ }
+
+ repeated MonsterSighting sightings = 1;
+}
+
+message StartEncounterRequest {
+ optional int32 x = 1;
+ optional int32 y = 2;
+ optional uint32 data = 3;
+}
+
+message StartEncounterResponse {
+ optional bool valid = 1;
+ optional uint32 species = 2;
+ optional uint32 attack = 3;
+ optional uint32 defense = 4;
+ optional uint32 stamina = 5;
+ optional uint32 size = 6;
+ optional uint32 level = 7;
+ optional uint32 spawntime = 8;
+ optional uint32 quickmove = 9;
+ optional uint32 chargemove = 10;
+}
+
+message GiveSeedResponse {
+ optional bool ok = 1;
+}
+
+message ThrowBallRequest {
+ optional uint32 ball = 1;
+}
+
+message ThrowBallResponse {
+
+ enum BallThrowResult {
+  THROW_RESULT_CATCH = 0;
+  THROW_RESULT_BREAK_OUT_AFTER_ONE = 1;
+  THROW_RESULT_BREAK_OUT_AFTER_TWO = 2;
+  THROW_RESULT_BREAK_OUT_AFTER_THREE = 3;
+  THROW_RESULT_RUN_AWAY_AFTER_ONE = 4;
+  THROW_RESULT_RUN_AWAY_AFTER_TWO = 5;
+  THROW_RESULT_RUN_AWAY_AFTER_THREE = 6;
+ }
+ optional BallThrowResult result = 1;
+ optional uint64 catchid = 2;
+}
+
+message GetMapTilesRequest {
+ optional int32 x = 1;
+ optional int32 y = 2;
+}
+
+message GetMapTilesResponse {
+ optional bytes data = 1;
+}
+
+message PowerUpMonsterRequest {
+ optional uint64 id = 1;
+}
+
+message PowerUpMonsterResponse {
+ optional bool ok = 1;
+ optional uint32 level = 2;
+}
+
+message EvolveMonsterRequest {
+ optional uint64 id = 1;
+}
+
+message EvolveMonsterResponse {
+ optional bool ok = 1;
+ optional uint32 species = 2;
+ optional string name = 3;
+ optional uint32 hp = 4;
+ optional uint32 quickmove = 5;
+ optional uint32 chargemove = 6;
+}
+
+message TransferMonsterRequest {
+ optional uint64 id = 1;
+}
+
+message SetMonsterNameRequest {
+ optional uint64 id = 1;
+ optional string name = 2;
+}
+
+message GetRecentStopsResponse {
+ message RecentStopVisit {
+  optional int32 x = 1;
+  optional int32 y = 2;
+  optional uint32 t = 3;
+ }
+
+ repeated RecentStopVisit stops = 1;
+}
+
+message GetItemsFromStopRequest {
+ optional int32 x = 1;
+ optional int32 y = 2;
+}
+
+message GetItemsFromStopResponse {
+ message InventoryItem {
+  optional uint32 item = 1;
+  optional uint32 count = 2;
+ }
+
+ repeated InventoryItem items = 1;
+}
+
+message SetTeamRequest {
+
+ enum Team {
+  TEAM_UNASSIGNED = 0;
+  TEAM_RED = 1;
+  TEAM_BLUE = 2;
+  TEAM_YELLOW = 3;
+ }
+ optional Team team = 1;
+}
+
+message GetPitStatusRequest {
+ optional int32 x = 1;
+ optional int32 y = 2;
+}
+
+message GetPitStatusResponse {
+ message MonsterDetails {
+  optional uint64 owner = 1;
+  optional string ownername = 2;
+  optional uint64 id = 3;
+  optional uint32 species = 4;
+  optional string name = 5;
+  optional uint32 hp = 6;
+  optional uint32 attack = 7;
+  optional uint32 defense = 8;
+  optional uint32 stamina = 9;
+  optional uint32 size = 10;
+  optional uint32 level = 11;
+  optional uint32 quickmove = 12;
+  optional uint32 chargemove = 13;
+ }
+
+
+ enum Team {
+  TEAM_UNASSIGNED = 0;
+  TEAM_RED = 1;
+  TEAM_BLUE = 2;
+  TEAM_YELLOW = 3;
+ }
+ optional Team team = 1;
+ optional uint32 reputation = 2;
+ repeated MonsterDetails defenders = 3;
+}
+
+message AssignPitDefenderRequest {
+ optional int32 x = 1;
+ optional int32 y = 2;
+ optional uint64 id = 3;
+}
+
+message AssignPitDefenderResponse {
+ optional bool ok = 1;
+}
+
+message StartPitBattleRequest {
+ optional int32 x = 1;
+ optional int32 y = 2;
+ repeated uint64 monsters = 3;
+}
+
+message StartPitBattleResponse {
+ message MonsterDetails {
+  optional uint64 owner = 1;
+  optional string ownername = 2;
+  optional uint64 id = 3;
+  optional uint32 species = 4;
+  optional string name = 5;
+  optional uint32 hp = 6;
+  optional uint32 attack = 7;
+  optional uint32 defense = 8;
+  optional uint32 stamina = 9;
+  optional uint32 size = 10;
+  optional uint32 level = 11;
+  optional uint32 quickmove = 12;
+  optional uint32 chargemove = 13;
+ }
+
+ optional bool ok = 1;
+ repeated MonsterDetails defenders = 2;
+}
+
+message SetAttackerRequest {
+ optional uint64 monster = 1;
+}
+
+message StepPitBattleResponse {
+
+ enum PitBattleState {
+  PIT_BATTLE_WAITING_FOR_ACTION = 0;
+  PIT_BATTLE_ATTACK_QUICK_MOVE_NOT_EFFECTIVE = 1;
+  PIT_BATTLE_ATTACK_QUICK_MOVE_EFFECTIVE = 2;
+  PIT_BATTLE_ATTACK_QUICK_MOVE_SUPER_EFFECTIVE = 3;
+  PIT_BATTLE_ATTACK_CHARGE_MOVE_NOT_EFFECTIVE = 4;
+  PIT_BATTLE_ATTACK_CHARGE_MOVE_EFFECTIVE = 5;
+  PIT_BATTLE_ATTACK_CHARGE_MOVE_SUPER_EFFECTIVE = 6;
+  PIT_BATTLE_DEFEND_QUICK_MOVE_NOT_EFFECTIVE = 7;
+  PIT_BATTLE_DEFEND_QUICK_MOVE_EFFECTIVE = 8;
+  PIT_BATTLE_DEFEND_QUICK_MOVE_SUPER_EFFECTIVE = 9;
+  PIT_BATTLE_DEFEND_QUICK_MOVE_DODGE = 10;
+  PIT_BATTLE_DEFEND_CHARGE_MOVE_NOT_EFFECTIVE = 11;
+  PIT_BATTLE_DEFEND_CHARGE_MOVE_EFFECTIVE = 12;
+  PIT_BATTLE_DEFEND_CHARGE_MOVE_SUPER_EFFECTIVE = 13;
+  PIT_BATTLE_DEFEND_CHARGE_MOVE_DODGE = 14;
+  PIT_BATTLE_ATTACK_FAINT = 15;
+  PIT_BATTLE_DEFEND_FAINT = 16;
+  PIT_BATTLE_NEW_OPPONENT = 17;
+  PIT_BATTLE_WIN = 18;
+  PIT_BATTLE_LOSE = 19;
+ }
+ optional PitBattleState state = 1;
+ optional uint32 charge = 2;
+ optional uint32 attackerhp = 3;
+ optional uint32 defenderhp = 4;
+ optional uint64 opponent = 5;
+}
+
+message SetPitBattleActionRequest {
+
+ enum PitBattleAction {
+  PIT_ACTION_NOT_CHOSEN = 0;
+  PIT_ACTION_ATTACK_QUICK_MOVE = 1;
+  PIT_ACTION_ATTACK_CHARGE_MOVE = 2;
+  PIT_ACTION_DODGE = 3;
+ }
+ optional PitBattleAction action = 1;
+}
+
+message EndPitBattleResponse {
+ optional uint32 reputation = 1;
+}
+
+message HealMonsterRequest {
+ optional uint64 monster = 1;
+ optional uint32 item = 2;
+}
+
+message HealMonsterResponse {
+ optional uint32 hp = 1;
+ optional uint32 count = 2;
+}
+
+message GetLevel40FlagResponse {
+ optional string flag = 1;
+}
+
+message GetCatchEmAllFlagResponse {
+ optional string flag = 1;
+}
+
+message GetAllPlayerInfoResponse {
+ optional GetPlayerDetailsResponse player = 1;
+ optional GetMonsterListResponse monsters = 2;
+ optional GetMonstersSeenAndCapturedResponse captured = 3;
+ optional GetTreatsResponse treats = 4;
+ optional GetInventoryResponse inventory = 5;
+}
+
