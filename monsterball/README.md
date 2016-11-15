@@ -4,19 +4,19 @@ This was a set of two reversing challenges by Vector 35. We were given a client 
 
 The following files were provided during the CTF:
 
-- [`game_client`](./game_client): 
-- [`libprotobuf.so.11`](./libprotobuf.so.11): 
+- [`game_client`](./game_client): The client for the game
+- [`libprotobuf.so.11`](./libprotobuf.so.11): The shared object necessary to run the client
 - [`remote.crt`](./remote.crt): Originally `server.crt`, the SSL certificate for securely connecting to the game server
+
+The source code for the client and server has since been [released](https://github.com/vector35/supermonsterball/).
 
 I developed the following files to solve the challenges:
 
 - [`request.proto`](./request.proto): The protobuf protocol definitions for this binary, obtained by running [Protod](https://github.com/sysdream/Protod) on it
 - [`request_pb2.py`](./request_pb2.py): The python version of the protocol definitions, obtained by running `protoc --python_out=. request.proto`
 - [`client.py`](./client.py): The client I wrote for the game. Has lots of functionality controlled through `argv[1]`, check the bottom of the file.
-- [`socat.crt`](./socat.crt) and [`socat.key`](./socat.key): A keypair for my man-in-the-middle setup to use. Generated via `openssl req -newkey rsa:2048 -nodes -keyout socat.key -x509 -days 365 -out socat.crt`
+- [`socat.crt`](./socat.crt) and [`socat.key`](./socat.key): A keypair for my man-in-the-middle setup to use. Generated via `openssl req -newkey rsa:2048 -nodes -keyout socat.key -x509 -days 365 -out socat.crt`. `server.crt` is symlinked to `socat.crt`.
 - [`mitm.sh`](./mitm.sh): My man-in-the-middle script to dump out communications between the real client and the server. Running it listens on port 8080 for connections, prints out nicely-formatted traffic between the client and server, and then exits after connection close.
-
-The source code for the client and server has since been [released](https://github.com/vector35/supermonsterball/).
 
 There were two flags that could be obtained from this challenge. The first was given to players who successfully captured all 103 monsters, and the latter was given to players who successfully reached level 40 and defeated the "pit of doom", a difficult boss battle. If at any point the player did anything "illegal", their account would be marked for a ban, and they would not discover this until they could get the flag, which is a pretty huge dick move, especially considered we were never told what the criteria for getting banned were!
 
